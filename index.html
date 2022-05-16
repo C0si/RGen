@@ -38,7 +38,7 @@
             box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
         }
 
-        .staticrypt-form input {
+        .staticrypt-form input[type="password"] {
             outline: 0;
             background: #f2f2f2;
             width: 100%;
@@ -110,6 +110,21 @@
         .staticrypt-footer a {
             text-decoration: none;
         }
+
+        label.staticrypt-remember {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+
+        .staticrypt-remember input[type=checkbox] {
+            transform: scale(1.5);
+            margin-right: 1em;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -127,8 +142,15 @@
             <input id="staticrypt-password"
                    type="password"
                    name="password"
-                   placeholder="passphrase"
+                   placeholder="Passphrase"
                    autofocus/>
+
+            <label id="staticrypt-remember-label" class="staticrypt-remember hidden">
+                <input id="staticrypt-remember"
+                       type="checkbox"
+                       name="remember"/>
+                Remember me
+            </label>
 
             <input type="submit" class="staticrypt-decrypt-button" value="DECRYPT"/>
         </form>
@@ -6135,49 +6157,144 @@
 }));</script>
 
 <script>
+    // variables to be filled when generating the file
+    var encryptedMsg = '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',
+        salt = 'b802a03153e172ceb9e59bf3c2e81e33',
+        isRememberEnabled = true,
+        rememberDurationInDays = 0; // 0 means forever
+
+    // constants
+    var rememberPassphraseKey = 'staticrypt_passphrase',
+        rememberExpirationKey = 'staticrypt_expiration';
 
     /**
      * Decrypt a salted msg using a password.
      * Inspired by https://github.com/adonespitogo
+     *
+     * @param  encryptedMsg
+     * @param  hashedPassphrase
+     * @returns 
      */
-    var keySize = 256;
-    var iterations = 1000;
-    function decrypt (encryptedMsg, pass) {
-        var salt = CryptoJS.enc.Hex.parse(encryptedMsg.substr(0, 32));
-        var iv = CryptoJS.enc.Hex.parse(encryptedMsg.substr(32, 32))
-        var encrypted = encryptedMsg.substring(64);
+    function decryptMsg(encryptedMsg, hashedPassphrase) {
+        var iv = CryptoJS.enc.Hex.parse(encryptedMsg.substr(0, 32))
+        var encrypted = encryptedMsg.substring(32);
 
-        var key = CryptoJS.PBKDF2(pass, salt, {
-            keySize: keySize/32,
-            iterations: iterations
-        });
-
-        var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
+        return CryptoJS.AES.decrypt(encrypted, hashedPassphrase, {
             iv: iv,
             padding: CryptoJS.pad.Pkcs7,
             mode: CryptoJS.mode.CBC
         }).toString(CryptoJS.enc.Utf8);
-        return decrypted;
     }
 
-    document.getElementById('staticrypt-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        var passphrase = document.getElementById('staticrypt-password').value,
-            encryptedMsg = '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',
-            encryptedHMAC = encryptedMsg.substring(0, 64),
+    /**
+     * Decrypt our encrypted page, replace the whole HTML.
+     *
+     * @param  hashedPassphrase
+     * @returns 
+     */
+    function decryptAndReplaceHtml(hashedPassphrase) {
+        var encryptedHMAC = encryptedMsg.substring(0, 64),
             encryptedHTML = encryptedMsg.substring(64),
-            decryptedHMAC = CryptoJS.HmacSHA256(encryptedHTML, CryptoJS.SHA256(passphrase).toString()).toString();
+            decryptedHMAC = CryptoJS.HmacSHA256(encryptedHTML, CryptoJS.SHA256(hashedPassphrase).toString()).toString();
 
         if (decryptedHMAC !== encryptedHMAC) {
-            alert('Bad passphrase!');
-            return;
+            return false;
         }
 
-        var plainHTML = decrypt(encryptedHTML, passphrase);
+        var plainHTML = decryptMsg(encryptedHTML, hashedPassphrase);
 
         document.write(plainHTML);
         document.close();
+
+        return true;
+    }
+
+    /**
+     * Salt and hash the passphrase so it can be stored in localStorage without opening a password reuse vulnerability.
+     *
+     * @param  passphrase
+     * @returns 
+     */
+    function hashPassphrase(passphrase) {
+        return CryptoJS.PBKDF2(passphrase, salt, {
+            keySize: 256 / 32,
+            iterations: 1000
+        }).toString();
+    }
+
+    /**
+     * Clear localstorage from staticrypt related values
+     */
+    function clearLocalStorage() {
+        localStorage.removeItem(rememberPassphraseKey);
+        localStorage.removeItem(rememberExpirationKey);
+    }
+
+    // try to automatically decrypt on load if there is a saved password
+    window.onload = function () {
+        if (isRememberEnabled) {
+            // show the remember me checkbox
+            document.getElementById('staticrypt-remember-label').classList.remove('hidden');
+
+            // if we are login out, clear the storage and terminate
+            var queryParams = new URLSearchParams(window.location.search);
+
+            if (queryParams.has("staticrypt_logout")) {
+                return clearLocalStorage();
+            }
+
+            // if there is expiration configured, check if we're not beyond the expiration
+            if (rememberDurationInDays && rememberDurationInDays > 0) {
+                var expiration = localStorage.getItem(rememberExpirationKey),
+                    isExpired = expiration && new Date().getTime() > parseInt(expiration);
+
+                if (isExpired) {
+                    return clearLocalStorage();
+                }
+            }
+
+            var hashedPassphrase = localStorage.getItem(rememberPassphraseKey);
+
+            if (hashedPassphrase) {
+                // try to decrypt
+                var isDecryptionSuccessful = decryptAndReplaceHtml(hashedPassphrase);
+
+                // if the decryption is unsuccessful the password might be wrong - silently clear the saved data and let
+                // the user fill the password form again
+                if (!isDecryptionSuccessful) {
+                    return clearLocalStorage();
+                }
+            }
+        }
+    }
+
+    // handle password form submission
+    document.getElementById('staticrypt-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var passphrase = document.getElementById('staticrypt-password').value,
+            shouldRememberPassphrase = document.getElementById('staticrypt-remember').checked;
+
+        // decrypt and replace the whole page
+        var hashedPassphrase = hashPassphrase(passphrase);
+        var isDecryptionSuccessful = decryptAndReplaceHtml(hashedPassphrase);
+
+        if (isDecryptionSuccessful) {
+            // remember the hashedPassphrase and set its expiration if necessary
+            if (isRememberEnabled && shouldRememberPassphrase) {
+                window.localStorage.setItem(rememberPassphraseKey, hashedPassphrase);
+
+                // set the expiration if the duration isn't 0 (meaning no expiration)
+                if (rememberDurationInDays > 0) {
+                    window.localStorage.setItem(
+                        rememberExpirationKey,
+                        (new Date().getTime() + rememberDurationInDays * 24 * 60 * 60 * 1000).toString()
+                    );
+                }
+            }
+        } else {
+            alert('Bad passphrase!');
+        }
     });
 </script>
 </body>
